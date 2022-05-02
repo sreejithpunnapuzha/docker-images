@@ -1,0 +1,114 @@
+#!/usr/bin/env bash
+
+WORKSPACEDIR="$(mktemp -d -p /var/tmp baseimg-tmp.XXXXXX)"
+IMAGE_TAG=$1
+DOCKER_REGISTRY=$2
+DOCKER_USER=$3
+DOCKER_PWD=$4
+
+#Install necessary packages
+apt-get update && apt-get install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common multistrap docker.io containerd
+
+#Start and enable docker
+systemctl start docker
+systemctl enable docker
+
+#Configuration for multistrap
+cat << EOF | tee ${WORKSPACEDIR}/bionic.conf
+[General]
+arch=amd64
+directory=ubuntu_bionic
+cleanup=true
+noauth=false
+explicitsuite=false
+unpack=true
+bootstrap=bionic bionic-updates bionic-security
+
+[bionic]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+keyring=ubuntu-keyring
+suite=bionic
+components=main multiverse restricted universe
+
+[bionic-updates]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+suite=bionic-updates
+components=main multiverse restricted universe
+
+[bionic-security]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+suite=bionic-security
+components=main multiverse restricted universe
+EOF
+
+cat << EOF | tee ${WORKSPACEDIR}/focal.conf
+[General]
+arch=amd64
+directory=ubuntu_focal
+cleanup=true
+noauth=false
+explicitsuite=false
+unpack=true
+bootstrap=focal focal-updates focal-security
+
+[focal]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+keyring=ubuntu-keyring
+suite=focal
+components=main multiverse restricted universe
+
+[focal-updates]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+suite=focal-updates
+components=main multiverse restricted universe
+
+[focal-security]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+suite=focal-security
+components=main multiverse restricted universe
+EOF
+
+cat << EOF | tee ${WORKSPACEDIR}/jammy.conf
+[General]
+arch=amd64
+directory=ubuntu_jammy
+cleanup=true
+noauth=false
+explicitsuite=false
+unpack=true
+bootstrap=jammy jammy-updates jammy-security
+
+[jammy]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+keyring=ubuntu-keyring
+suite=jammy
+components=main multiverse restricted universe
+
+[jammy-updates]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+suite=jammy-updates
+components=main multiverse restricted universe
+
+[jammy-security]
+packages=apt kmod iproute2 curl wget
+source=http://archive.ubuntu.com/ubuntu
+suite=jammy-security
+components=main multiverse restricted universe
+EOF
+
+#Build image using multistrap
+cd ${WORKSPACEDIR}
+multistrap -f ${WORKSPACEDIR}/${IMAGE_TAG}.conf
+tar -C ubuntu_${IMAGE_TAG} -c . | docker import - "${DOCKER_REGISTRY}/${DOCKER_USER}/ubuntu:${IMAGE_TAG}"
+
+#Login and push docker image
+docker login ${DOCKER_REGISTRY} -u ${DOCKER_USER} -p ${DOCKER_PWD}
+docker push ${DOCKER_REGISTRY}/${DOCKER_USER}/ubuntu:${IMAGE_TAG}
