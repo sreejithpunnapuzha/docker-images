@@ -38,7 +38,10 @@ jobs:
       - name: Build Ubuntu xenial with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:xenial-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:xenial" --build-arg UBUNTU_RELEASE=xenial
+          docker build -f Dockerfile . \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:xenial-dind-latest \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:xenial" \
+            --build-arg UBUNTU_RELEASE=xenial
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
@@ -56,7 +59,10 @@ jobs:
       - name: Build Ubuntu bionic with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:bionic-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:bionic" --build-arg UBUNTU_RELEASE=bionic
+          docker build -f Dockerfile . \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:bionic-dind-latest \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:bionic" \
+            --build-arg UBUNTU_RELEASE=bionic
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
@@ -74,7 +80,10 @@ jobs:
       - name: Build Ubuntu focal with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:focal-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:focal" --build-arg UBUNTU_RELEASE=focal
+          docker build -f Dockerfile . \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:focal-dind-latest \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:focal" \
+            --build-arg UBUNTU_RELEASE=focal
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
@@ -92,7 +101,10 @@ jobs:
       - name: Build Ubuntu jammy with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:jammy-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" --build-arg UBUNTU_RELEASE=jammy
+          docker build -f Dockerfile . \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:jammy-dind-latest \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" \
+            --build-arg UBUNTU_RELEASE=jammy
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
@@ -100,3 +112,31 @@ jobs:
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_image
+
+  ubuntu_nsenter:
+    runs-on: ubuntu-20.04
+    container:
+      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
+    env:
+      VERSION: 2.37
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Ubuntu based nsenter
+        run: |
+          cd nsenter/
+          docker build -f Dockerfile . --network=host \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:latest \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:$VERSION \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" \
+            --build-arg TIMEZONE=America/Chicago \
+            --build-arg UTIL_LINUX_VER=$VERSION \
+            --build-arg UBUNTU_RELEASE=jammy
+      - name: Login to Docker registry
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+      - name: Push image to Docker registry
+        run: |
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:latest
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:$VERSION
+      - name: Completed image build
+        run: echo "completed image build"
+    needs: ubuntu_jammy_dind
