@@ -140,3 +140,25 @@ jobs:
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_jammy_dind
+
+  alpine_image:
+    runs-on: ubuntu-20.04
+    container:
+      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Alpine image
+        run: |
+          cd alpine
+          docker build -f Dockerfile . \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.15.4
+      - name: Login to Docker registry
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+      - name: Push image to Docker registry
+        run: |
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.15.4
+      - name: Completed image build
+        run: echo "completed image build"
+    needs: ubuntu_jammy_dind
