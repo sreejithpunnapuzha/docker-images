@@ -5,3 +5,5 @@ Following are the images that can be build using this repo
 1. base images
 2. DIND
 3. nsenter
+4. alpine
+5. openssh server
