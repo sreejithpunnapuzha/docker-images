@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WORKSPACEDIR="$(mktemp -d -p /tmp baseimg-tmp.XXXXXX)"
+WORKSPACEDIR="$(mktemp -d -p /var/tmp baseimg-tmp.XXXXXX)"
 IMAGE_TAG=$1
 DOCKER_REGISTRY=$2
 DOCKER_USER=$3

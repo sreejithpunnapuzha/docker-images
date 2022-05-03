@@ -19,11 +19,11 @@ jobs:
           echo "deb http://security.ubuntu.com/ubuntu focal-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://archive.canonical.com/ubuntu focal partner" | sudo tee -a /etc/apt/sources.list
       - name: Build Ubuntu docker bionic baseimage
-        run: sudo ./baseimage/create-baseimage bionic ${{ secrets.QUAYIOREPO }} ${{ secrets.QUAYIOUSER }} ${{ secrets.QUAYIOPWD }}
+        run: sudo ./baseimage/create-baseimage bionic ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker focal baseimage
-        run: sudo ./baseimage/create-baseimage focal ${{ secrets.QUAYIOREPO }} ${{ secrets.QUAYIOUSER }} ${{ secrets.QUAYIOPWD }}
+        run: sudo ./baseimage/create-baseimage focal ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker jammy baseimage
-        run: sudo ./baseimage/create-baseimage jammy ${{ secrets.QUAYIOREPO }} ${{ secrets.QUAYIOUSER }} ${{ secrets.QUAYIOPWD }}
+        run: sudo ./baseimage/create-baseimage jammy ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Completed image build
         run: echo "completed image build"
 
@@ -36,11 +36,11 @@ jobs:
       - name: Build Ubuntu bionic with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.QUAYIOREPO }}/${{ secrets.QUAYIOUSER }}/ubuntu:bionic-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:bionic" --build-arg UBUNTU_RELEASE=bionic
+          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:bionic-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:bionic" --build-arg UBUNTU_RELEASE=bionic
       - name: Login to Docker registry
-        run: docker login ${{ secrets.QUAYIOREPO }} -u ${{ secrets.QUAYIOUSER }} -p ${{ secrets.QUAYIOPWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
-        run: docker push ${{ secrets.QUAYIOREPO }}/${{ secrets.QUAYIOUSER }}/ubuntu:bionic-dind-latest
+        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:bionic-dind-latest
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_image
@@ -54,11 +54,11 @@ jobs:
       - name: Build Ubuntu focal with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.QUAYIOREPO }}/${{ secrets.QUAYIOUSER }}/ubuntu:focal-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:focal" --build-arg UBUNTU_RELEASE=focal
+          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:focal-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:focal" --build-arg UBUNTU_RELEASE=focal
       - name: Login to Docker registry
-        run: docker login ${{ secrets.QUAYIOREPO }} -u ${{ secrets.QUAYIOUSER }} -p ${{ secrets.QUAYIOPWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
-        run: docker push ${{ secrets.QUAYIOREPO }}/${{ secrets.QUAYIOUSER }}/ubuntu:focal-dind-latest
+        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:focal-dind-latest
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_image
@@ -72,11 +72,11 @@ jobs:
       - name: Build Ubuntu jammy with dind
         run: |
           cd dind/
-          docker build -f Dockerfile . -t ${{ secrets.QUAYIOREPO }}/${{ secrets.QUAYIOUSER }}/ubuntu:jammy-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" --build-arg UBUNTU_RELEASE=jammy
+          docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:jammy-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" --build-arg UBUNTU_RELEASE=jammy
       - name: Login to Docker registry
-        run: docker login ${{ secrets.QUAYIOREPO }} -u ${{ secrets.QUAYIOUSER }} -p ${{ secrets.QUAYIOPWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
-        run: docker push ${{ secrets.QUAYIOREPO }}/${{ secrets.QUAYIOUSER }}/ubuntu:jammy-dind-latest
+        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:jammy-dind-latest
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_image
