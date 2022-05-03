@@ -19,7 +19,7 @@ jobs:
           echo "deb http://security.ubuntu.com/ubuntu focal-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://archive.canonical.com/ubuntu focal partner" | sudo tee -a /etc/apt/sources.list
       - name: Build Ubuntu docker xenial baseimage
-        run: sudo ./ubuntu/ubuntu-baseimage xenial ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
+        run: sudo ./baseimage/create-baseimage xenial ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker bionic baseimage
         run: sudo ./baseimage/create-baseimage bionic ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker focal baseimage
@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build Ubuntu xenial with dind
         run: |
-          cd ubuntu/dind/
+          cd dind/
           docker build -f Dockerfile . -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:xenial-dind-latest --build-arg FROM="quay.io/sreejithp/ubuntu:xenial" --build-arg UBUNTU_RELEASE=xenial
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
