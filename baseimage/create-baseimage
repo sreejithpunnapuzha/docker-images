@@ -18,66 +18,6 @@ systemctl start docker
 systemctl enable docker
 
 #Configuration for multistrap
-cat << EOF | tee ${WORKSPACEDIR}/xenial.conf
-[General]
-arch=amd64
-directory=ubuntu_xenial
-cleanup=true
-noauth=false
-explicitsuite=false
-unpack=true
-bootstrap=xenial xenial-updates xenial-security
-
-[xenial]
-packages=apt kmod iproute2 curl wget
-source=http://archive.ubuntu.com/ubuntu
-keyring=ubuntu-keyring
-suite=xenial
-components=main multiverse restricted universe
-
-[xenial-updates]
-packages=apt kmod iproute2 curl wget
-source=http://archive.ubuntu.com/ubuntu
-suite=xenial-updates
-components=main multiverse restricted universe
-
-[xenial-security]
-packages=apt kmod iproute2 curl wget
-source=http://archive.ubuntu.com/ubuntu
-suite=xenial-security
-components=main multiverse restricted universe
-EOF
-
-cat << EOF | tee ${WORKSPACEDIR}/bionic.conf
-[General]
-arch=amd64
-directory=ubuntu_bionic
-cleanup=true
-noauth=false
-explicitsuite=false
-unpack=true
-bootstrap=bionic bionic-updates bionic-security
-
-[bionic]
-packages=apt kmod iproute2 curl wget
-source=http://archive.ubuntu.com/ubuntu
-keyring=ubuntu-keyring
-suite=bionic
-components=main multiverse restricted universe
-
-[bionic-updates]
-packages=apt kmod iproute2 curl wget
-source=http://archive.ubuntu.com/ubuntu
-suite=bionic-updates
-components=main multiverse restricted universe
-
-[bionic-security]
-packages=apt kmod iproute2 curl wget
-source=http://archive.ubuntu.com/ubuntu
-suite=bionic-security
-components=main multiverse restricted universe
-EOF
-
 cat << EOF | tee ${WORKSPACEDIR}/focal.conf
 [General]
 arch=amd64
