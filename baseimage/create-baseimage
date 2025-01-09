@@ -27,20 +27,20 @@ unpack=true
 bootstrap=focal focal-updates focal-security
 
 [focal]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 keyring=ubuntu-keyring
 suite=focal
 components=main multiverse restricted universe
 
 [focal-updates]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 suite=focal-updates
 components=main multiverse restricted universe
 
 [focal-security]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 suite=focal-security
 components=main multiverse restricted universe
@@ -57,20 +57,20 @@ unpack=true
 bootstrap=jammy jammy-updates jammy-security
 
 [jammy]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 keyring=ubuntu-keyring
 suite=jammy
 components=main multiverse restricted universe
 
 [jammy-updates]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 suite=jammy-updates
 components=main multiverse restricted universe
 
 [jammy-security]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 suite=jammy-security
 components=main multiverse restricted universe
@@ -87,20 +87,20 @@ unpack=true
 bootstrap=noble noble-updates noble-security
 
 [noble]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 keyring=ubuntu-keyring
 suite=noble
 components=main multiverse restricted universe
 
 [noble-updates]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 suite=noble-updates
 components=main multiverse restricted universe
 
 [noble-security]
-packages=apt kmod iproute2 curl wget
+packages=apt kmod iproute2 curl wget bash
 source=http://archive.ubuntu.com/ubuntu
 suite=noble-security
 components=main multiverse restricted universe
