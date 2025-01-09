@@ -17,33 +17,12 @@ jobs:
           echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs)-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs)-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://security.ubuntu.com/ubuntu $(lsb_release -cs)-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-      - name: Build Ubuntu docker focal baseimage
-        run: sudo ./baseimage/create-baseimage focal ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker jammy baseimage
         run: sudo ./baseimage/create-baseimage jammy ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
+      - name: Build Ubuntu docker noble baseimage
+        run: sudo ./baseimage/create-baseimage noble ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Completed image build
         run: echo "completed image build"
-
-  ubuntu_focal_dind:
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/sreejithp/ubuntu:focal-dind-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Build Ubuntu focal with dind
-        run: |
-          cd dind/
-          docker build -f Dockerfile . \
-            -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:focal-dind-latest \
-            --build-arg FROM="quay.io/sreejithp/ubuntu:focal" \
-            --build-arg UBUNTU_RELEASE=focal
-      - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
-      - name: Push image to Docker registry
-        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:focal-dind-latest
-      - name: Completed image build
-        run: echo "completed image build"
-    needs: ubuntu_image
 
   ubuntu_jammy_dind:
     runs-on: ubuntu-latest
@@ -66,10 +45,31 @@ jobs:
         run: echo "completed image build"
     needs: ubuntu_image
 
+  ubuntu_noble_dind:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/sreejithp/ubuntu:noble-dind-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Ubuntu noble with dind
+        run: |
+          cd dind/
+          docker build -f Dockerfile . \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:noble-dind-latest \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:noble" \
+            --build-arg UBUNTU_RELEASE=noble
+      - name: Login to Docker registry
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+      - name: Push image to Docker registry
+        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:noble-dind-latest
+      - name: Completed image build
+        run: echo "completed image build"
+    needs: ubuntu_image
+
   ubuntu_nsenter:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
+      image: quay.io/sreejithp/ubuntu:noble-dind-latest
     env:
       VERSION: 2.40.2
     steps:
@@ -80,10 +80,10 @@ jobs:
           docker build -f Dockerfile . --network=host \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:latest \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:$VERSION \
-            --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:noble" \
             --build-arg TIMEZONE=America/Chicago \
             --build-arg UTIL_LINUX_VER=$VERSION \
-            --build-arg UBUNTU_RELEASE=jammy
+            --build-arg UBUNTU_RELEASE=noble
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
@@ -92,12 +92,12 @@ jobs:
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:$VERSION
       - name: Completed image build
         run: echo "completed image build"
-    needs: ubuntu_jammy_dind
+    needs: ubuntu_noble_dind
 
   alpine_image:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
+      image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build Alpine image
@@ -114,4 +114,4 @@ jobs:
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.21.2
       - name: Completed image build
         run: echo "completed image build"
-    needs: ubuntu_jammy_dind
+    needs: ubuntu_noble_dind
