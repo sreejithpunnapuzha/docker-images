@@ -69,7 +69,7 @@ jobs:
   ubuntu_nsenter:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/sreejithp/ubuntu:noble-dind-latest
+      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     env:
       VERSION: 2.40.2
     steps:
@@ -92,12 +92,12 @@ jobs:
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:$VERSION
       - name: Completed image build
         run: echo "completed image build"
-    needs: ubuntu_noble_dind
+    needs: ubuntu_jammy_dind
 
   alpine_image:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/sreejithp/ubuntu:noble-dind-latest
+      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build Alpine image
@@ -114,4 +114,4 @@ jobs:
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.21.2
       - name: Completed image build
         run: echo "completed image build"
-    needs: ubuntu_noble_dind
+    needs: ubuntu_jammy_dind
