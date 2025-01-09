@@ -13,11 +13,11 @@ jobs:
       - uses: actions/checkout@v2
       - name: Add repos
         run: |
-          echo "deb http://archive.ubuntu.com/ubuntu focal main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.ubuntu.com/ubuntu focal-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.ubuntu.com/ubuntu focal-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://security.ubuntu.com/ubuntu focal-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.canonical.com/ubuntu focal partner" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.canonical.com/ubuntu noble partner" | sudo tee -a /etc/apt/sources.list
       - name: Build Ubuntu docker focal baseimage
         run: sudo ./baseimage/create-baseimage focal ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker jammy baseimage
