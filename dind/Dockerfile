@@ -12,10 +12,10 @@ RUN echo "deb http://archive.ubuntu.com/ubuntu ${UBUNTU_RELEASE} main restricted
 	&& apt autoremove -y && apt clean && rm -rf /var/lib/apt/lists/*
 
 ENV DOCKER_CHANNEL stable
-ENV DOCKER_VERSION 20.10.14
+ENV DOCKER_VERSION 27.4.1
 ENV dockerArch x86_64
 # https://github.com/docker/docker/tree/master/hack/dind
-ENV DIND_COMMIT 42b1175eda071c0e9121e1d64345928384a93df1
+ENV DIND_COMMIT 65cfcc28ab37cb75e1560e4b4738719c07c6618e
 
 RUN set -eux; \
 	if ! wget -O docker.tgz "https://download.docker.com/linux/static/${DOCKER_CHANNEL}/${dockerArch}/docker-${DOCKER_VERSION}.tgz"; then \

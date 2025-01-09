@@ -2,7 +2,7 @@ ARG FROM=quay.io/sreejithp/ubuntu:jammy
 FROM ${FROM} as builder
 
 ARG TIMEZONE=America/Chicago
-ARG UTIL_LINUX_VER=2.39.3
+ARG UTIL_LINUX_VER=2.40.2
 ARG UBUNTU_RELEASE=jammy
 
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone; \
