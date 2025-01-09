@@ -48,7 +48,7 @@ jobs:
   ubuntu_noble_dind:
     runs-on: ubuntu-latest
     container:
-      image: quay.io/sreejithp/ubuntu:noble-dind-latest
+      image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     steps:
       - uses: actions/checkout@v2
       - name: Build Ubuntu noble with dind
