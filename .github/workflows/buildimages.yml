@@ -8,15 +8,15 @@ on:
 
 jobs:
   ubuntu_image:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Add repos
         run: |
-          echo "deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs) main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs)-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs)-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
+          echo "deb http://security.ubuntu.com/ubuntu $(lsb_release -cs)-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
       - name: Build Ubuntu docker focal baseimage
         run: sudo ./baseimage/create-baseimage focal ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker jammy baseimage
@@ -25,7 +25,7 @@ jobs:
         run: echo "completed image build"
 
   ubuntu_focal_dind:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container:
       image: quay.io/sreejithp/ubuntu:focal-dind-latest
     steps:
@@ -46,7 +46,7 @@ jobs:
     needs: ubuntu_image
 
   ubuntu_jammy_dind:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container:
       image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     steps:
@@ -67,11 +67,11 @@ jobs:
     needs: ubuntu_image
 
   ubuntu_nsenter:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container:
       image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     env:
-      VERSION: 2.37
+      VERSION: 2.40.2
     steps:
       - uses: actions/checkout@v2
       - name: Build Ubuntu based nsenter
@@ -95,7 +95,7 @@ jobs:
     needs: ubuntu_jammy_dind
 
   alpine_image:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     container:
       image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     steps:
@@ -105,13 +105,13 @@ jobs:
           cd alpine
           docker build -f Dockerfile . \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest \
-            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.15.4
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.21.2
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest
-          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.15.4
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.21.2
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_jammy_dind
