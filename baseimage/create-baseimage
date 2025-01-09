@@ -108,7 +108,7 @@ EOF
 
 #Build image using multistrap
 cd ${WORKSPACEDIR}
-multistrap -f ${WORKSPACEDIR}/${IMAGE_TAG}.conf --clean
+multistrap -f ${WORKSPACEDIR}/${IMAGE_TAG}.conf --tidy-up
 tar -C ubuntu_${IMAGE_TAG} -c . | docker import - "${DOCKER_REGISTRY}/${DOCKER_USER}/ubuntu:${IMAGE_TAG}"
 
 #Login and push docker image
