@@ -18,7 +18,7 @@ RUN mkdir /var/run/sshd; \
     chmod 0700 /root/.ssh; \
     echo 'root:myp@ssw0rd' | chpasswd; \
     sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config; \
-    sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd 
+    sed 's@session\s*required\s*pam_loginuid.so@session optional pam_loginuid.so@g' -i /etc/pam.d/sshd
 
 EXPOSE 22
 
