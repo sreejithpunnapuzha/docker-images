@@ -17,7 +17,6 @@ jobs:
           echo "deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
-          echo "deb http://archive.canonical.com/ubuntu noble partner" | sudo tee -a /etc/apt/sources.list
       - name: Build Ubuntu docker focal baseimage
         run: sudo ./baseimage/create-baseimage focal ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker jammy baseimage
