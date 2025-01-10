@@ -2,7 +2,7 @@ ARG FROM=quay.io/sreejithp/ubuntu:jammy
 FROM ${FROM} as builder
 
 ARG TIMEZONE=America/Chicago
-ARG UTIL_LINUX_VER=2.40.2
+ARG UTIL_LINUX_VER=2.40.3
 ARG UBUNTU_RELEASE=jammy
 
 RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /etc/timezone; \
@@ -11,7 +11,7 @@ RUN ln -snf /usr/share/zoneinfo/$TIMEZONE /etc/localtime && echo $TIMEZONE > /et
     echo "deb http://archive.ubuntu.com/ubuntu ${UBUNTU_RELEASE}-backports main restricted universe multiverse" >> /etc/apt/sources.list; \
     echo "deb http://security.ubuntu.com/ubuntu ${UBUNTU_RELEASE}-security main restricted universe multiverse" >> /etc/apt/sources.list; \
     apt-get update && apt-get dist-upgrade -y; \
-    apt-get update && apt-get install -yq git make gcc gettext autopoint bison libtool automake pkg-config flex sqlite3 asciidoctor po4a \
+    apt-get update && apt-get install -yq apt-utils git make gcc gettext autopoint bison libtool automake pkg-config flex sqlite3 asciidoctor po4a \
     && apt-get autoremove -y --purge && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /code
