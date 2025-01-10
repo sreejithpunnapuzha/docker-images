@@ -71,7 +71,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     env:
-      VERSION: 2.40.2
+      VERSION: 2.40.3
     steps:
       - uses: actions/checkout@v2
       - name: Build Ubuntu based nsenter
