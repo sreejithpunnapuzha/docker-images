@@ -116,7 +116,7 @@ jobs:
         run: echo "completed image build"
     needs: ubuntu_noble_dind
 
-  ubuntu_sshd_image:
+  ubuntu_opensshd_image:
     runs-on: ubuntu-latest
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
@@ -136,6 +136,30 @@ jobs:
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/sshd:noble-latest
+      - name: Completed image build
+        run: echo "completed image build"
+    needs: ubuntu_noble_dind
+
+  ubuntu_openldap_image:
+    runs-on: ubuntu-latest
+    container:
+      image: quay.io/sreejithp/ubuntu:noble-dind-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build Ubuntu based openldap
+        run: |
+          cd openssh/
+          docker build -f Dockerfile . --network=host \
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/openldap:noble-latest \
+            --build-arg FROM="quay.io/sreejithp/ubuntu:noble" \
+            --build-arg TIMEZONE=America/Chicago \
+            --build-arg UTIL_LINUX_VER=$VERSION \
+            --build-arg UBUNTU_RELEASE=noble
+      - name: Login to Docker registry
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+      - name: Push image to Docker registry
+        run: |
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/openldap:noble-latest
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_noble_dind
