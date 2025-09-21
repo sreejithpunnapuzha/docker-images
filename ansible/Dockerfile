@@ -1,9 +1,8 @@
 FROM ubuntu:24.04
-LABEL maintainer="Jeff Geerling"
 
 ARG DEBIAN_FRONTEND=noninteractive
 
-ENV pip_packages "ansible"
+ENV pip_packages "ansible ansible-lint"
 
 # Install dependencies.
 RUN apt-get update \
@@ -17,7 +16,6 @@ RUN apt-get update \
        python3-dev \
        python3-setuptools \
        python3-pip \
-       python3-yaml \
        software-properties-common \
        rsyslog systemd systemd-cron sudo iproute2 \
     && apt-get clean \
