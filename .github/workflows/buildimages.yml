@@ -105,13 +105,13 @@ jobs:
           cd alpine
           docker build -f Dockerfile . \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest \
-            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.21.2
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.23.4
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest
-          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.21.2
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.23.4
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_noble_dind
