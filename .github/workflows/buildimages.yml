@@ -10,7 +10,7 @@ jobs:
   ubuntu_image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Add repos
         run: |
           echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs) main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
@@ -29,7 +29,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Ubuntu jammy with dind
         run: |
           cd dind/
@@ -50,7 +50,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Ubuntu noble with dind
         run: |
           cd dind/
@@ -73,7 +73,7 @@ jobs:
     env:
       VERSION: 2.40.3
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Ubuntu based nsenter
         run: |
           cd nsenter/
@@ -99,7 +99,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Get latest Alpine minirootfs version
         id: alpine
         run: |
@@ -134,7 +134,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Ubuntu based sshd
         run: |
           cd openssh/
@@ -158,7 +158,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Build Ubuntu based openldap
         run: |
           cd openssh/
