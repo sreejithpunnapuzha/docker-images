@@ -2,9 +2,9 @@ name: Docker Build CI
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
   pull_request:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   ubuntu_image:
@@ -18,9 +18,11 @@ jobs:
           echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs)-backports main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
           echo "deb http://security.ubuntu.com/ubuntu $(lsb_release -cs)-security main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
       - name: Build Ubuntu docker jammy baseimage
-        run: sudo ./baseimage/create-baseimage jammy ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
+        run: sudo ./baseimage/create-baseimage jammy ${{ secrets.REPO }} ${{
+          secrets.USER }} ${{ secrets.PWD }}
       - name: Build Ubuntu docker noble baseimage
-        run: sudo ./baseimage/create-baseimage noble ${{ secrets.REPO }} ${{ secrets.USER }} ${{ secrets.PWD }}
+        run: sudo ./baseimage/create-baseimage noble ${{ secrets.REPO }} ${{
+          secrets.USER }} ${{ secrets.PWD }}
       - name: Completed image build
         run: echo "completed image build"
 
@@ -38,9 +40,11 @@ jobs:
             --build-arg FROM="quay.io/sreejithp/ubuntu:jammy" \
             --build-arg UBUNTU_RELEASE=jammy
       - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD
+          }}
       - name: Push image to Docker registry
-        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:jammy-dind-latest
+        run: docker push ${{ secrets.REPO }}/${{ secrets.USER
+          }}/ubuntu:jammy-dind-latest
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_image
@@ -59,9 +63,11 @@ jobs:
             --build-arg FROM="quay.io/sreejithp/ubuntu:noble" \
             --build-arg UBUNTU_RELEASE=noble
       - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD
+          }}
       - name: Push image to Docker registry
-        run: docker push ${{ secrets.REPO }}/${{ secrets.USER }}/ubuntu:noble-dind-latest
+        run: docker push ${{ secrets.REPO }}/${{ secrets.USER
+          }}/ubuntu:noble-dind-latest
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_image
@@ -85,7 +91,8 @@ jobs:
             --build-arg UTIL_LINUX_VER=$VERSION \
             --build-arg UBUNTU_RELEASE=noble
       - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD
+          }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/nsenter:latest
@@ -115,12 +122,13 @@ jobs:
       - name: Build Alpine image
         run: |
           cd alpine
-          docker build -f Dockerfile . \
+          docker build -f Dockerfile \
             --build-arg ALPINE_VERSION=${{ steps.alpine.outputs.version }} \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest \
-            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:${{ steps.alpine.outputs.version }}
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:${{ steps.alpine.outputs.version }} .
       - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD
+          }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest
@@ -145,7 +153,8 @@ jobs:
             --build-arg UTIL_LINUX_VER=$VERSION \
             --build-arg UBUNTU_RELEASE=noble
       - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD
+          }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/sshd:noble-latest
@@ -169,7 +178,8 @@ jobs:
             --build-arg UTIL_LINUX_VER=$VERSION \
             --build-arg UBUNTU_RELEASE=noble
       - name: Login to Docker registry
-        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
+        run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD
+          }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/openldap:noble-latest
