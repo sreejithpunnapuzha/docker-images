@@ -100,18 +100,31 @@ jobs:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
       - uses: actions/checkout@v2
+      - name: Get latest Alpine minirootfs version
+        id: alpine
+        run: |
+          BASE_URL="https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/"
+
+          LATEST=$(curl -s $BASE_URL \
+            | grep -o 'alpine-minirootfs-[0-9.]*-x86_64.tar.gz' \
+            | sed 's/alpine-minirootfs-\(.*\)-x86_64.tar.gz/\1/' \
+            | sort -V | tail -n1)
+
+          echo "Latest Alpine version: $LATEST"
+          echo "version=$LATEST" >> $GITHUB_OUTPUT
       - name: Build Alpine image
         run: |
           cd alpine
           docker build -f Dockerfile . \
+            --build-arg ALPINE_VERSION=${{ steps.alpine.outputs.version }} \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest \
-            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.23.4
+            -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:${{ steps.alpine.outputs.version }}
       - name: Login to Docker registry
         run: docker login ${{ secrets.REPO }} -u ${{ secrets.USER }} -p ${{ secrets.PWD }}
       - name: Push image to Docker registry
         run: |
           docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest
-          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:3.23.4
+          docker push ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:${{ steps.alpine.outputs.version }}
       - name: Completed image build
         run: echo "completed image build"
     needs: ubuntu_noble_dind

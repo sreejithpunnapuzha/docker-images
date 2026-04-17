@@ -1,3 +1,6 @@
+ARG ALPINE_VERSION
 FROM scratch
-ADD alpine-minirootfs-3.23.4-x86_64.tar.gz /
+
+ADD https://dl-cdn.alpinelinux.org/alpine/v${ALPINE_VERSION}/releases/x86_64/alpine-minirootfs-${ALPINE_VERSION}-x86_64.tar.gz /
+
 CMD ["/bin/sh"]
