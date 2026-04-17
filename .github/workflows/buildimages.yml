@@ -10,7 +10,7 @@ jobs:
   ubuntu_image:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Add repos
         run: |
           echo "deb http://archive.ubuntu.com/ubuntu $(lsb_release -cs) main restricted universe multiverse" | sudo tee -a /etc/apt/sources.list
@@ -31,7 +31,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:jammy-dind-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Ubuntu jammy with dind
         run: |
           cd dind/
@@ -54,7 +54,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Ubuntu noble with dind
         run: |
           cd dind/
@@ -79,7 +79,7 @@ jobs:
     env:
       VERSION: 2.40.3
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Ubuntu based nsenter
         run: |
           cd nsenter/
@@ -106,24 +106,31 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Get latest Alpine minirootfs version
         id: alpine
         run: |
+          set -e
           BASE_URL="https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/"
 
-          LATEST=$(curl -s $BASE_URL \
-            | grep -o 'alpine-minirootfs-[0-9.]*-x86_64.tar.gz' \
-            | sed 's/alpine-minirootfs-\(.*\)-x86_64.tar.gz/\1/' \
+          FILE=$(curl -s $BASE_URL \
+            | grep -oE 'alpine-minirootfs-[0-9]+\.[0-9]+\.[0-9]+-x86_64\.tar\.gz' \
             | sort -V | tail -n1)
 
-          echo "Latest Alpine version: $LATEST"
-          echo "version=$LATEST" >> "$GITHUB_OUTPUT"
+          VERSION=$(echo "$FILE" | sed -E 's/alpine-minirootfs-([0-9]+\.[0-9]+\.[0-9]+)-x86_64\.tar\.gz/\1/')
+
+          URL="https://dl-cdn.alpinelinux.org/alpine/v${VERSION}/releases/x86_64/${FILE}"
+
+          echo "Latest version: $VERSION"
+          echo "URL: $URL"
+
+          echo "url=$URL" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
       - name: Build Alpine image
         run: |
           cd alpine
           docker build -f Dockerfile \
-            --build-arg ALPINE_VERSION=${{ steps.alpine.outputs.version }} \
+            --build-arg ALPINE_URL="${{ steps.alpine.outputs.url }}" \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:latest \
             -t ${{ secrets.REPO }}/${{ secrets.USER }}/alpine:${{ steps.alpine.outputs.version }} .
       - name: Login to Docker registry
@@ -142,7 +149,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Ubuntu based sshd
         run: |
           cd openssh/
@@ -167,7 +174,7 @@ jobs:
     container:
       image: quay.io/sreejithp/ubuntu:noble-dind-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build Ubuntu based openldap
         run: |
           cd openssh/
