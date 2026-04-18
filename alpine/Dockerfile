@@ -3,14 +3,12 @@ ARG ALPINE_URL
 FROM alpine:latest AS downloader
 ARG ALPINE_URL
 
-RUN wget -O /rootfs.tar.gz "$ALPINE_URL"
+RUN wget -O /rootfs.tar.gz "$ALPINE_URL" \
+    && mkdir /rootfs \
+    && tar -xzf /rootfs.tar.gz -C /rootfs
 
 FROM scratch
 
-# copy into root
-COPY --from=downloader /rootfs.tar.gz /rootfs.tar.gz
-
-# now extract it
-ADD /rootfs.tar.gz /
+COPY --from=downloader /rootfs/ /
 
 CMD ["/bin/sh"]
