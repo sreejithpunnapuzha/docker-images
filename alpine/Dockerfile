@@ -7,7 +7,10 @@ RUN wget -O /rootfs.tar.gz "$ALPINE_URL"
 
 FROM scratch
 
-COPY --from=downloader /rootfs.tar.gz /
-ADD /rootfs.tar.gz /
+# copy into root
+COPY --from=downloader /rootfs.tar.gz /rootfs.tar.gz
+
+# now extract it
+ADD rootfs.tar.gz /
 
 CMD ["/bin/sh"]
