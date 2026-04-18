@@ -119,7 +119,7 @@ jobs:
 
           VERSION=$(echo "$FILE" | sed -E 's/alpine-minirootfs-([0-9]+\.[0-9]+\.[0-9]+)-x86_64\.tar\.gz/\1/')
 
-          URL="https://dl-cdn.alpinelinux.org/alpine/v${VERSION}/releases/x86_64/${FILE}"
+          URL="https://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/${FILE}"
 
           echo "Latest version: $VERSION"
           echo "URL: $URL"
