@@ -11,6 +11,6 @@ FROM scratch
 COPY --from=downloader /rootfs.tar.gz /rootfs.tar.gz
 
 # now extract it
-ADD rootfs.tar.gz /
+ADD /rootfs.tar.gz /
 
 CMD ["/bin/sh"]
